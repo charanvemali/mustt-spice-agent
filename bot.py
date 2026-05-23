@@ -1,4 +1,3 @@
-```python
 import os
 import re
 import json
@@ -51,8 +50,9 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
                     await update.message.reply_text("⚡ *Dispatched Sourcing Agent across web registries...*")
                     
                     raw_data = tool_research_agent_search(**call.args)
-                    clean_json = re.sub(r"```json|
-```", "", raw_data).strip()
+                    # Safe regex parsing to strip markdown blocks cleanly
+                    clean_json = raw_data.replace("```json", "").replace("
+```", "").strip()
                     suppliers = json.loads(clean_json)
                     
                     spice_context = call.args.get("spice_type", "General").title()
